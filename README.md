@@ -1,1 +1,1 @@
-# This is a Tutorial for Golang for jardaanii
+# This is a Tutorial of Golang for jardaanii
