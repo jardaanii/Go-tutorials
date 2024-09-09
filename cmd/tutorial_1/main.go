@@ -4,7 +4,7 @@ import "fmt"
 
 func main(){
   printPls("Hello U All!!");
-  fmt.Println(divisionPls(7,5));
+  fmt.Println(divisionPls(7,6));
 
 }
 
