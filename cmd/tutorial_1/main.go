@@ -11,40 +11,42 @@ import (
 func main(){
   
 //  ErroHandel();
+    
 
 // ArrayT();
 
 // Strings();
 
-   Structs();  // About Structs and interfaces
-
+// Structs();  // About Structs and interfaces
+ 
+Pointers(); // pointers in go
 
 }
 
 
-//func ErrorHandel(){
-// printPls("Hello U All!!");
-//	var result, remainder,err = divisionPls(6,0); 
-//  if(err!=nil){
-//    fmt.Println(err.Error());	
-//  }
-//  fmt.Printf("The result of the integer division is %v with remainder %v", result,remainder)
-//}
+func ErrorHandel(){
+printPls("Hello U All!!");
+	var result, remainder,err = divisionPls(6,0); 
+ if(err!=nil){
+   fmt.Println(err.Error());	
+ }
+  fmt.Printf("The result of the integer division is %v with remainder %v", result,remainder)
+}
 
-//func printPls(str string){
-//  fmt.Println(str);
-//}
+func printPls(str string){
+  fmt.Println(str);
+}
 
-//func divisionPls(n1 ,n2 int) (int, int, error){
-//        var err error
-//	if n2 == 0{
-//	err = errors.New("Cannot Divide by Zero");
-//	return 0,0, err;
-//	}
-//	divAns:=n1/n2;
-//	rimAns:=n1%n2;
-// return divAns, rimAns, err;
-// }
+func divisionPls(n1 ,n2 int) (int, int, error){
+        var err error
+	if n2 == 0{
+	err = errors.New("Cannot Divide by Zero");
+	return 0,0, err;
+	}
+	divAns:=n1/n2;
+	rimAns:=n1%n2;
+ return divAns, rimAns, err;
+ }
 
 //Arrays
 
@@ -174,8 +176,22 @@ func Strings(){
 	var catStr = strBuilder.String();
 	fmt.Printf("\n %v", catStr)
      
-
+        
 }
+
+type engine interface{
+    milesLeft()   uint
+}
+
+type electricEngine struct {
+	mpkwh uint
+	kwh   int
+}
+
+func (e electricEngine)milesLeft()uint{
+	return e.mpkwh * uint(e.kwh);
+}
+ 
 
 type gasEngine struct{
 	mpg uint
@@ -192,6 +208,16 @@ type owner struct{
 	name string
 }
 
+func canMakeIt(e engine, miles int){
+   
+	if miles<=int(e.milesLeft()){
+		fmt.Println("You can make it there");
+	}else{
+		fmt.Println("You cannot make it fuel up fast!!");
+	}
+
+}
+
 
 func Structs(){
 	var myEngine gasEngine = gasEngine{gallons: 23, mpg: 45,ownerName:  owner{"Akash"}}
@@ -203,7 +229,7 @@ func Structs(){
 	//Anonymous Structs
 	// these structs are declared and used at that time itself and cannot be reused
 
-	var myEngine2 = struct {
+	var myEngine2 = struct{
 		name string
 		age int
 	}{"Akash", 23};
@@ -213,15 +239,18 @@ func Structs(){
 
 	fmt.Println(myEngine.milesLeft());
 
+	canMakeIt(myEngine, 11);
+	
+	var myEEngine electricEngine = electricEngine{4, 23};
+	canMakeIt(myEEngine, 98);
+      
 }
 
 
+func Pointers(){
+  
+	//var p *int32 =;
 
+	//fmt.Println(p);
 
-
-
-
-
-
-
-
+}
