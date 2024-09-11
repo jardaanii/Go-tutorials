@@ -3,7 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+//	"math/rand"
 	"strings"
+	"sync"
 	"time"
 	"unicode/utf8"
 )
@@ -19,7 +21,11 @@ func main(){
 
 // Structs();  // About Structs and interfaces
  
-Pointers(); // pointers in go
+// Pointers(); // pointers in go
+
+// goRoutines()
+
+ goChannels()
 
 }
 
@@ -248,9 +254,103 @@ func Structs(){
 
 
 func Pointers(){
-  
-	//var p *int32 =;
+         
+	// p *int32 this stores address of a variable in memory and user 32 bits or 64 bits
+	// if you want the value it has on that address *p.
+	var p *int32= new (int32);
+        // Here above i have assigned a memory location of int32 to the Pointer it then takes the 
+	// and saves the address and assigns the zero value of that type in that address.
+	fmt.Println(*p);
 
-	//fmt.Println(p);
+	*p=15;
+        //to change the value stored at the memory location of a pointer we do *p = x;
+
+	fmt.Println(*p);
+        
+	var i int32= 23;
+
+	p = &i;
+        // to give the pointer an address of another variable we use & symbole that make p to save
+	// the address of the variable p = &i p has now the address of i variable;
+
+	*p =45;
+	// Now this above code has changed the value at the location it had stored which was of i 
+	// So the valu of i has also been changed now.
+
+	 
+
+        // Now a weird thing about Slices
+
+	var slice = []int{1,2,3};
+        var sliceCopy =  slice;
+
+	sliceCopy[2]= 4;
+
+	fmt.Println(slice);
+	fmt.Println(sliceCopy);
+
+	// you see the output of this will be {1,2,4} and {1,2,4} this means under the hood slice
+	// Slices contain the pointer to the underlying array means the sliceCopy array saves 
+	// the address of the slice arrays 0th index and then makes a cpoy so both slices are  
+	// Pointing to the same location.
 
 }
+
+
+
+var wg = sync.WaitGroup{};
+//var m =  sync.Mutex{};
+ 
+var m =  sync.RWMutex{};
+
+var dbData = []string{"id1" ,"id2" ,"id3" ,"id4" ,"id5"  }
+var results = []string{};
+
+func goRoutines(){
+        
+	t0:=time.Now();
+	for i:=0 ; i<len(dbData) ;i++{
+	      wg.Add(1);
+	      go dbCall(i)
+	}
+        
+
+	wg.Wait()
+	fmt.Printf("Total time for execution is: %v", time.Since(t0));
+ 	fmt.Printf("\n The results are %v", results );
+}
+
+func dbCall(i int){
+	var delay float32 = 1000;
+
+	time.Sleep(time.Duration(delay)*time.Millisecond );
+
+        
+	save(dbData[i]);
+	log()
+
+	wg.Done()
+}
+
+
+func save(result string){
+	m.Lock()
+	results =  append(results, result);
+ 	m.Unlock()
+}
+
+func log(){
+	m.RLock()
+	fmt.Printf("\nThe current results are: %v", results);
+        m.RUnlock()
+}
+
+
+
+func goChannel(){
+
+}
+
+
+
+
