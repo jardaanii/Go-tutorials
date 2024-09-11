@@ -347,7 +347,7 @@ func log(){
 
 
 
-func goChannel(){
+func goChannels(){
 
 }
 
