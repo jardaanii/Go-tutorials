@@ -3,11 +3,13 @@ package main
 import (
 	"errors"
 	"fmt"
-//	"math/rand"
+
+	"math/rand"
 	"strings"
 	"sync"
 	"time"
 	"unicode/utf8"
+
 )
 
 func main(){
@@ -25,7 +27,8 @@ func main(){
 
 // goRoutines()
 
- goChannels()
+// goChannels()
+ goChickenChannel();
 
 }
 
@@ -349,8 +352,77 @@ func log(){
 
 func goChannels(){
 
+        var c =make (chan int ,5);
+	go process(c);
+	for i:= range c{
+         fmt.Println(i);
+	 time.Sleep(time.Second*1)
+	}
+
+}
+
+func process(c chan int){
+	defer close(c)
+	for i:=0 ; i<5 ; i++{
+		c<-i
+
+
+	}
+        fmt.Println("The function is exiting")	
+}
+
+var maxChickenPrize =5;
+var maxTofuPrize = 3;
+
+func goChickenChannel(){
+	chickenChannel := make(chan string);
+	tofuChannel := make(chan string);
+	website := []string{"walmart.com", "costco.com", "wholefoods.com"}
+        for i:= range website{
+	  go getDiscountedChicken(chickenChannel, website[i]);
+	  go getDiscountedTofu(tofuChannel, website[i]);
+	}
+        
+	sendMessage(chickenChannel, tofuChannel);	
+}
+
+func getDiscountedTofu(tofuChannel chan string, website string){
+	for{
+
+		time.Sleep(time.Second *1 );
+		var tofuprice = rand.Int()*20;
+		if tofuprice <= maxTofuPrize{
+			tofuChannel<-website;	
+			break
+			
+		}
+	}
+
 }
 
 
+func getDiscountedChicken(chickenChannel chan string, website string){
+	for{
+
+		time.Sleep(time.Second *1 );
+		var Chickenprice = rand.Int()*20;
+		if Chickenprice <= maxChickenPrize{
+			chickenChannel<-website;	
+			break
+			
+		}
+	}
+
+}
+
+
+func sendMessage(chickenChannel chan string, tofuChannel chan string){
+   select{
+	case website := <-chickenChannel:
+	     fmt.Printf("There is a deal on chicken on %v", website);
+	case website:= <-tofuChannel:
+	      fmt.Printf("There is a deal on Tofu on %v", website)
+	}
+}
 
 
